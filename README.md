@@ -1,3 +1,3 @@
 # QBall
 
-Quantum basketball
+Quantum Othello
