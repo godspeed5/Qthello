@@ -20,6 +20,7 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 LG = (144,238,144)
+GRAY = (200,200,200)
  
 # This sets the WIDTH and HEIGHT of each grid location
 WIDTH = 100
@@ -46,11 +47,12 @@ grid[4][4] = 2
 grid[3][3] = 2
 grid[8][0] = 1
 grid[8][1] = 2
+
 # Initialize pygame
 pygame.init()
  
 # Set the HEIGHT and WIDTH of the screen
-WINDOW_SIZE = [WIDTH*8+MARGIN*7, HEIGHT*9+MARGIN*8]
+WINDOW_SIZE = [WIDTH*8+MARGIN*7, HEIGHT*10+MARGIN*9]
 screen = pygame.display.set_mode(WINDOW_SIZE)
  
 # Set title of screen
@@ -63,12 +65,14 @@ done = False
 font=pygame.font.SysFont('arial', 40)
 
 centerlist=[]
-for row in range(9):
+for row in range(10):
     alist=[]
     for column in range(8):
         alist.append(((MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN))
     centerlist.append(alist)
 
+bag_rects = [centerlist[9][i] for i in range(6)]
+bag_counts = [6]*6
 s_text=font.render('S', True, BLUE)
 s_rects=[centerlist[0][0],centerlist[0][7],centerlist[7][0],centerlist[7][7]]
 
@@ -108,20 +112,66 @@ while not done:
     screen.fill(BLACK)
  
     # Draw the grid
-    for row1 in range(9):
+    for row1 in range(10):
         for column1 in range(8):
             color = WHITE
             if grid[row1][column1] == 1:
                 color = GREEN
             if grid[row1][column1] == 2:
             	color = BLACK
+
             pygame.draw.rect(screen,
                              color,
                              [(MARGIN + WIDTH) * column1 + MARGIN,
                               (MARGIN + HEIGHT) * row1 + MARGIN,
                               WIDTH,
                               HEIGHT])
-            
+            if row1==8 and (column1==2 or column1 == 3):
+                pygame.draw.rect(screen,
+                             LG,
+                             [(MARGIN + WIDTH) * column1 + MARGIN,
+                              (MARGIN + HEIGHT) * row1 + MARGIN,
+                              WIDTH/2,
+                              HEIGHT])
+                pygame.draw.rect(screen,
+                             GRAY,
+                             [(MARGIN + WIDTH) * column1 + MARGIN+WIDTH/2,
+                              (MARGIN + HEIGHT) * row1 + MARGIN,
+                              WIDTH/2,
+                              HEIGHT])
+            if row1==8 and column1 == 4:
+                pygame.draw.rect(screen,
+                             LG,
+                             [(MARGIN + WIDTH) * column1 + MARGIN,
+                              (MARGIN + HEIGHT) * row1 + MARGIN,
+                              3*WIDTH/4,
+                              HEIGHT])
+                pygame.draw.rect(screen,
+                             GRAY,
+                             [(MARGIN + WIDTH) * column1 + MARGIN+3*WIDTH/4,
+                              (MARGIN + HEIGHT) * row1 + MARGIN,
+                              WIDTH/4,
+                              HEIGHT])
+            if row1==8 and column1 == 5:
+                pygame.draw.rect(screen,
+                             LG,
+                             [(MARGIN + WIDTH) * column1 + MARGIN,
+                              (MARGIN + HEIGHT) * row1 + MARGIN,
+                              WIDTH/4,
+                              HEIGHT])
+                pygame.draw.rect(screen,
+                             GRAY,
+                             [(MARGIN + WIDTH) * column1 + MARGIN+WIDTH/4,
+                              (MARGIN + HEIGHT) * row1 + MARGIN,
+                              3*WIDTH/4,
+                              HEIGHT])
+            if row1==8 and column1 == 7:
+                pygame.draw.rect(screen,
+                             RED,
+                             [(MARGIN + WIDTH) * column1 + MARGIN,
+                              (MARGIN + HEIGHT) * row1 + MARGIN,
+                              WIDTH,
+                              HEIGHT])
             for rect in s_rects:
             	screen.blit(s_text, rect)
             
@@ -133,6 +183,9 @@ while not done:
             
             for rect in x_rects:
             	screen.blit(x_text, rect)
+            for i in range(6):
+                text = font.render(str(bag_counts[i]), True, BLUE)
+                screen.blit(text, bag_rects[i])
             screen.blit(m_text, m_rect)
             screen.blit(q0_text, centerlist[8][0])
             screen.blit(q1_text, centerlist[8][1])
