@@ -19,10 +19,11 @@ WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
+LG = (144,238,144)
  
 # This sets the WIDTH and HEIGHT of each grid location
-WIDTH = 80
-HEIGHT = 80
+WIDTH = 100
+HEIGHT = 100
  
 # This sets the margin between each cell
 MARGIN = 3
@@ -43,11 +44,13 @@ grid[4][3] = 1
 grid[3][4] = 1
 grid[4][4] = 2
 grid[3][3] = 2
+grid[8][0] = 1
+grid[8][1] = 2
 # Initialize pygame
 pygame.init()
  
 # Set the HEIGHT and WIDTH of the screen
-WINDOW_SIZE = [WIDTH*8+MARGIN*7, WIDTH*8+MARGIN*7]
+WINDOW_SIZE = [WIDTH*8+MARGIN*7, HEIGHT*9+MARGIN*8]
 screen = pygame.display.set_mode(WINDOW_SIZE)
  
 # Set title of screen
@@ -60,10 +63,10 @@ done = False
 font=pygame.font.SysFont('arial', 40)
 
 centerlist=[]
-for row in range(8):
+for row in range(9):
     alist=[]
     for column in range(8):
-        alist.append(((MARGIN + WIDTH) * column + MARGIN + WIDTH/3, (MARGIN + HEIGHT) * row + MARGIN + HEIGHT/3))
+        alist.append(((MARGIN + WIDTH) * column + MARGIN, (MARGIN + HEIGHT) * row + MARGIN))
     centerlist.append(alist)
 
 s_text=font.render('S', True, BLUE)
@@ -77,7 +80,14 @@ h_rects=[centerlist[0][2],centerlist[2][0],centerlist[0][5],centerlist[5][0],cen
 
 x_text=font.render('X', True, BLUE)
 x_rects=[centerlist[2][2],centerlist[2][5],centerlist[5][2],centerlist[5][5]]
-
+m_text=font.render('m', True, BLUE)
+m_rect=centerlist[8][7]
+q0_text=font.render('|0>', True, BLUE)
+q1_text=font.render('|1>', True, WHITE)
+qplus_text=font.render('|+>', True, BLUE)
+qminus_text=font.render('|->', True, BLUE)
+q750_text = font.render('75|0>', True, BLUE)
+q751_text = font.render('75|1>', True, BLUE)
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
  
@@ -98,7 +108,7 @@ while not done:
     screen.fill(BLACK)
  
     # Draw the grid
-    for row1 in range(8):
+    for row1 in range(9):
         for column1 in range(8):
             color = WHITE
             if grid[row1][column1] == 1:
@@ -123,6 +133,14 @@ while not done:
             
             for rect in x_rects:
             	screen.blit(x_text, rect)
+            screen.blit(m_text, m_rect)
+            screen.blit(q0_text, centerlist[8][0])
+            screen.blit(q1_text, centerlist[8][1])
+            screen.blit(qplus_text, centerlist[8][2])
+            screen.blit(qminus_text, centerlist[8][3])
+            screen.blit(q750_text, centerlist[8][4])
+            screen.blit(q751_text, centerlist[8][5])
+
  
     # Limit to 60 frames per second
     clock.tick(60)
