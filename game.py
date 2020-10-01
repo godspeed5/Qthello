@@ -1,7 +1,7 @@
 import pygame
 from qiskit import *
 from pygame.locals import *
-
+import numpy as np
 """
  Example program to show using an array to back a grid on-screen.
  
@@ -47,6 +47,10 @@ grid[4][4] = 2
 grid[3][3] = 2
 grid[8][0] = 1
 grid[8][1] = 2
+measured = np.zeros((8,8))
+for i in range(3,5):
+    for j in range(3,5):
+        measured[i][j] = 1
 
 # Initialize pygame
 pygame.init()
@@ -60,7 +64,7 @@ pygame.display.set_caption("Qthello")
  
 # Loop until the user clicks the close button.
 done = False
-
+ismeasured = [[0 for i in range(8) if i]]
 # Set the font
 font=pygame.font.SysFont('arial', 40)
 
