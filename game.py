@@ -23,8 +23,8 @@ LG = (144,238,144)
 GRAY = (200,200,200)
  
 # This sets the WIDTH and HEIGHT of each grid location
-WIDTH = 100
-HEIGHT = 100
+WIDTH = 50
+HEIGHT = 50
  
 # This sets the margin between each cell
 MARGIN = 3
@@ -67,6 +67,7 @@ done = False
 ismeasured = [[0 for i in range(8) if i]]
 # Set the font
 font=pygame.font.SysFont('arial', 40)
+font2=pygame.font.SysFont('arial', 20)
 
 centerlist=[]
 for row in range(10):
@@ -77,6 +78,8 @@ for row in range(10):
 
 bag_rects = [centerlist[9][i] for i in range(6)]
 bag_counts = [6]*6
+
+# Renders for all the gates on the board
 s_text=font.render('S', True, BLUE)
 s_rects=[centerlist[0][0],centerlist[0][7],centerlist[7][0],centerlist[7][7]]
 
@@ -88,14 +91,16 @@ h_rects=[centerlist[0][2],centerlist[2][0],centerlist[0][5],centerlist[5][0],cen
 
 x_text=font.render('X', True, BLUE)
 x_rects=[centerlist[2][2],centerlist[2][5],centerlist[5][2],centerlist[5][5]]
+
+# Renders for our "bag" of discs
 m_text=font.render('m', True, BLUE)
 m_rect=centerlist[8][7]
-q0_text=font.render('|0>', True, BLUE)
-q1_text=font.render('|1>', True, WHITE)
-qplus_text=font.render('|+>', True, BLUE)
-qminus_text=font.render('|->', True, BLUE)
-q750_text = font.render('75|0>', True, BLUE)
-q751_text = font.render('75|1>', True, BLUE)
+q0_text=font2.render('|0>', True, BLUE)
+q1_text=font2.render('|1>', True, WHITE)
+qplus_text=font2.render('|+>', True, BLUE)
+qminus_text=font2.render('|->', True, BLUE)
+q750_text = font2.render('75|0>', True, BLUE)
+q751_text = font2.render('75|1>', True, BLUE)
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
  
@@ -130,47 +135,48 @@ while not done:
                               (MARGIN + HEIGHT) * row1 + MARGIN,
                               WIDTH,
                               HEIGHT])
-            if row1==8 and (column1==2 or column1 == 3):
-                pygame.draw.rect(screen,
+            if row1==8:
+                if(column1==2 or column1 == 3):
+                    pygame.draw.rect(screen,
                              LG,
                              [(MARGIN + WIDTH) * column1 + MARGIN,
                               (MARGIN + HEIGHT) * row1 + MARGIN,
                               WIDTH/2,
                               HEIGHT])
-                pygame.draw.rect(screen,
+                    pygame.draw.rect(screen,
                              GRAY,
                              [(MARGIN + WIDTH) * column1 + MARGIN+WIDTH/2,
                               (MARGIN + HEIGHT) * row1 + MARGIN,
                               WIDTH/2,
                               HEIGHT])
-            if row1==8 and column1 == 4:
-                pygame.draw.rect(screen,
+                if column1 == 4:
+                    pygame.draw.rect(screen,
                              LG,
                              [(MARGIN + WIDTH) * column1 + MARGIN,
                               (MARGIN + HEIGHT) * row1 + MARGIN,
                               3*WIDTH/4,
                               HEIGHT])
-                pygame.draw.rect(screen,
+                    pygame.draw.rect(screen,
                              GRAY,
                              [(MARGIN + WIDTH) * column1 + MARGIN+3*WIDTH/4,
                               (MARGIN + HEIGHT) * row1 + MARGIN,
                               WIDTH/4,
                               HEIGHT])
-            if row1==8 and column1 == 5:
-                pygame.draw.rect(screen,
+                if column1 == 5:
+                    pygame.draw.rect(screen,
                              LG,
                              [(MARGIN + WIDTH) * column1 + MARGIN,
                               (MARGIN + HEIGHT) * row1 + MARGIN,
                               WIDTH/4,
                               HEIGHT])
-                pygame.draw.rect(screen,
+                    pygame.draw.rect(screen,
                              GRAY,
                              [(MARGIN + WIDTH) * column1 + MARGIN+WIDTH/4,
                               (MARGIN + HEIGHT) * row1 + MARGIN,
                               3*WIDTH/4,
                               HEIGHT])
-            if row1==8 and column1 == 7:
-                pygame.draw.rect(screen,
+                if column1 == 7:
+                    pygame.draw.rect(screen,
                              RED,
                              [(MARGIN + WIDTH) * column1 + MARGIN,
                               (MARGIN + HEIGHT) * row1 + MARGIN,
