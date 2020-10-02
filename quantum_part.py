@@ -1,4 +1,5 @@
 from qiskit import QuantumCircuit, execute, BasicAer
+from qiskit.quantum_info import Statevector
 
 import numpy as np
 
@@ -19,6 +20,15 @@ class quantum_backend:
         self.x_squares = [[2,2],[2,5],[5,2],[5,5]]
         self.cx_squares = [[1,1],[1,6],[6,1],[6,6]]
         self.s_squares = [[0,0],[0,7],[7,0],[7,7]]
+
+        # States corresponding to what the player chooses
+        q0 = Statevector([1,0])
+        q1 = Statevector([0,1])
+        qp = Statevector([1/np.sqrt(2), 1/np.sqrt(2)])
+        qm = Statevector([1/np.sqrt(2), -1/np.sqrt(2)])
+        q075 = Statevector([np.sqrt(3)/2, -1/2])
+        q175 = Statevector([1/2, np.sqrt(3)/2])
+        self.state_dict = {0:q0, 1:q1, 2:qp, 3:qm, 4:q075, 5:q175}
     
     # Function to return the state given the circuit. The circuit would have
     # already been initialised with the state played
@@ -49,7 +59,7 @@ class quantum_backend:
         return self._get_state(qc)
     
     # If a move is played on one of the Swap squares
-    def _s_move(self, state):
+    def _en_move(self, state):
         qc = QuantumCircuit(2)
         qc.initialize(state, [0,1])
         qc.swap(0, 1)
@@ -78,13 +88,17 @@ class quantum_backend:
         x = move[0]
         y = move[1]
         if(move in self.h_squares):
+            state = self.state_dict[state]
             self.quantum_board[x][y] = self._h_move(state)
         elif(move in self.x_squares):
+            state = self.state_dict[state]
             self.quantum_board[x][y] = self._x_move(state)
         elif(move in self.cx_squares):
+            state = self.state_dict[state[0]].expand(self.state_dict[state[1]]])
             self.quantum_board[x][y] = self._cx_move(state)
         elif(move in self.s_squares):
-            self.quantum_board[x][y] = self._s_move(state)
+            self.state_dict[state[0]].expand(self.state_dict[state[1]]])
+            self.quantum_board[x][y] = self._en_move(state)
     
     # Function to be called from outside when a measurement is made
     def measurement_move(self, move):
