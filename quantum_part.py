@@ -12,7 +12,7 @@ class quantum_backend:
 
         # Two boards. One for the quantum states associated with the board
         # Other one to store the values after measurement
-        self.quantum_board = np.zeros([N, N])
+        self.quantum_board = [[None]*N for _ in range(N)]
         self.classical_board = np.zeros([N, N])
 
         # Store the positions of the gates
@@ -34,34 +34,34 @@ class quantum_backend:
     # already been initialised with the state played
     def _get_state(self, circuit):
         backend = BasicAer.get_backend("statevector_simulator")
-        state = execute(circuit, backend = backend).result().get_statevector()
+        state = Statevector(execute(circuit, backend = backend).result().get_statevector())
         return state
     
     # If a move is played on one of the H squares
     def _h_move(self, state):
         qc = QuantumCircuit(1)
-        qc.initialize(state, 0)
+        qc.initialize(state.data, 0)
         qc.h(0)
         return self._get_state(qc)
     
     # If a move is played on one of the X squares
     def _x_move(self, state):
         qc = QuantumCircuit(1)
-        qc.initialize(state, 0)
+        qc.initialize(state.data, 0)
         qc.x(0)
         return self._get_state(qc)
     
     # If a move is played on one of the CX squares
     def _cx_move(self, state):
         qc = QuantumCircuit(2)
-        qc.initialize(state, [0,1])
+        qc.initialize(state.data, [0,1])
         qc.cx(0, 1)
         return self._get_state(qc)
     
     # If a move is played on one of the Swap squares
     def _en_move(self, state):
         qc = QuantumCircuit(2)
-        qc.initialize(state, [0,1])
+        qc.initialize(state.data, [0,1])
         qc.h(0)
         qc.cx(0,1)
         return self._get_state(qc)
@@ -71,17 +71,16 @@ class quantum_backend:
         backend = BasicAer.get_backend("qasm_simulator")
         shots = 1
         # Get number of qubits
-        n = state.dims
+        n = int(np.log2(state.dim))
         qc = QuantumCircuit(n)
-        qc.initialize(state, range(n))
+        qc.initialize(state.data, range(n))
         # Make measurement
         qc.measure_all()
         results = execute(qc, backend = backend, shots = shots).result().get_counts()
-        bit = None
-        # Find the corresponding "bit"
+
+        # Find the measured state
         for key, _ in results.items():
-            bit = key.count("1")%2
-        return bit
+            return key
 
     # Function to be called from outside when a move is played that is not a
     # measurement
@@ -108,6 +107,8 @@ class quantum_backend:
         elif(move in self.en_squares):
             self.state_dict[state[0]].expand(self.state_dict[state[1]])
             self.quantum_board[x][y] = self._en_move(state)
+        else:
+            self.quantum_board[x][y] = self.state_dict[state]
     
     # Function to be called from outside when a measurement is made
     # Move is a list in the form [x,y] where x,y are the co-ordinates on the 
@@ -115,6 +116,9 @@ class quantum_backend:
     def measurement_move(self, move):
         x = move[0]
         y = move[1]
-        self.classical_board[x][y] = \
-        self._get_measurement(self.quantum_board[x][y])
-
+        out_state = self._get_measurement(self.quantum_board[x][y])
+        if move in self.en_squares:
+            self.classical_board[x][y] = int(out_state[1])
+            self.classical_board[7-x][7-y] = int(out_state[0])
+        else:
+            self.classical_board[x][y] = out_state.count("1")%2
