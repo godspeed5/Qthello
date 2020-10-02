@@ -13,7 +13,7 @@ from quantum_part import *
  Explanation video: http://youtu.be/mdTeqiWyFnc
 """
 
-qb = quantum_backend(["Dhruv", "Parth"])
+qb = quantum_backend()
 
 def countDigit(n): 
     count = 0
@@ -74,6 +74,7 @@ pygame.display.set_caption("Qthello")
 done = False
 
 #initialize game-tracking variables
+movenumber=0
 measured = np.zeros((8,8))
 for i in range(3,5):
     for j in range(3,5):
@@ -84,6 +85,9 @@ qmax = np.ones((8,8))
 for i in [1,6]:
     for j in [1,6]:
         qmax[i][j] = 2
+for i in range(3,5):
+    for j in range(3,5):
+        qmax[i][j] = 0
 qselected = None
 centerlist=[]
 for row in range(10):
@@ -93,7 +97,7 @@ for row in range(10):
     centerlist.append(alist)
 
 bag_rects = [centerlist[9][i] for i in range(6)]
-bag_counts = [6]*6
+bag_counts = np.ones((2,6))*6
 
 # Set the font
 font=pygame.font.SysFont('arial', 40)
@@ -147,15 +151,23 @@ while not done:
             if ismeasure:
                 qselected=None
                 measured[row][column]=1
+                movenumber+=1
                 # measurement stuff: Add calls to measure_move:eg:qb.measurement_move([row,column])
-            if (qselected is not None) and ((countDigit(qplayed[row][column])<qmax[row][column]) or qplayed[row][column]==0):
+            if (qselected is not None) and bag_counts[movenumber%2][qselected]>0 and ((countDigit(qplayed[row][column])<qmax[row][column]) or ([row,column] in [[3,5],[5,5],[3,3],[5,3]])):
                 qplayed[row][column] = 10*qplayed[row][column]+qselected+1
-                bag_counts[qselected] -= 1
+                bag_counts[movenumber%2][qselected] -= 1
+                grid[row][column] = 10+qselected
                 qselected = None
+                movenumber+=1
+                ismeasure=0
+                print(movenumber)
+                print(bag_counts)
+                
                 #qiskit stuff: Add calls to move:eq:qb.move([row,column], qplayed[row][column])
  
     # Set the screen background
     screen.fill(BLACK)
+    fracts = [1,0,0.5,0.5,0.75,0.25]
  
     # Draw the grid
     for row1 in range(10):
@@ -165,6 +177,10 @@ while not done:
                 color = GREEN
             if grid[row1][column1] == 2:
             	color = BLACK
+            if grid[row1][column1] == 4:
+            	color = LG
+            if grid[row1][column1] == 3:
+            	color = GRAY
 
             pygame.draw.rect(screen,
                              color,
@@ -172,6 +188,50 @@ while not done:
                               (MARGIN + HEIGHT) * row1 + MARGIN,
                               WIDTH,
                               HEIGHT])
+            if row1<8:
+            	if countDigit(qplayed[row1][column1])==1:
+	            	pygame.draw.rect(screen,
+	            		LG,
+	            		[(MARGIN + WIDTH) * column1 + MARGIN,
+	            		(MARGIN + HEIGHT) * row1 + MARGIN,
+	            		WIDTH*(fracts[grid[row1][column1]-10]),
+	            		HEIGHT])
+	            	pygame.draw.rect(screen,
+	                	GRAY,
+	                	[(MARGIN + WIDTH) * column1 + MARGIN+WIDTH*(fracts[grid[row1][column1]-10]),
+	                	(MARGIN + HEIGHT) * row1 + MARGIN,
+	                	WIDTH*(1-fracts[grid[row1][column1]-10]),
+	                	HEIGHT])
+            
+            if row1<8:
+            	if countDigit(qplayed[row1][column1])>1:
+            		pygame.draw.rect(screen,
+	            		LG,
+	            		[(MARGIN + WIDTH) * column1 + MARGIN,
+	            		(MARGIN + HEIGHT) * row1 + MARGIN,
+	            		WIDTH*(fracts[int(qplayed[row1][column1]/10)-1])/2,
+	            		HEIGHT])
+	            	pygame.draw.rect(screen,
+	                	GRAY,
+	                	[(MARGIN + WIDTH) * column1 + MARGIN+WIDTH*(fracts[int(qplayed[row1][column1]/10)-1])/2,
+	                	(MARGIN + HEIGHT) * row1 + MARGIN,
+	                	WIDTH*(1-(fracts[int(qplayed[row1][column1]/10)-1]))/2,
+	                	HEIGHT])
+            		pygame.draw.rect(screen,
+            		LG,
+            		[(MARGIN + WIDTH) * column1 + MARGIN+WIDTH/2,
+            		(MARGIN + HEIGHT) * row1 + MARGIN,
+            		WIDTH/2,
+            		HEIGHT*(fracts[grid[row1][column1]-10])])
+            		pygame.draw.rect(screen,
+	                	GRAY,
+	                	[(MARGIN + WIDTH) * column1 + MARGIN+WIDTH/2,
+	                	(MARGIN + HEIGHT) * row1 + MARGIN+HEIGHT*(fracts[grid[row1][column1]-10]),
+	                	WIDTH/2,
+	                	HEIGHT*(1-fracts[grid[row1][column1]-10])])
+
+
+
             if row1==8:
                 if(column1==2 or column1 == 3):
                     pygame.draw.rect(screen,
@@ -233,9 +293,10 @@ while not done:
             
             for rect in x_rects:
             	screen.blit(x_text, rect)
+            color = [GREEN, BLACK]
             for i in range(6):
-                text = font.render(str(bag_counts[i]), True, BLUE)
-                screen.blit(text, bag_rects[i])
+            	text = font.render(str(int(bag_counts[movenumber%2][i])), True, color[movenumber%2])
+            	screen.blit(text, bag_rects[i])
             screen.blit(m_text, m_rect)
             screen.blit(q0_text, centerlist[8][0])
             screen.blit(q1_text, centerlist[8][1])
