@@ -94,10 +94,10 @@ class quantum_backend:
             state = self.state_dict[state]
             self.quantum_board[x][y] = self._x_move(state)
         elif(move in self.cx_squares):
-            state = self.state_dict[state[0]].expand(self.state_dict[state[1]]])
+            state = self.state_dict[state[0]].expand(self.state_dict[state[1]])
             self.quantum_board[x][y] = self._cx_move(state)
         elif(move in self.s_squares):
-            self.state_dict[state[0]].expand(self.state_dict[state[1]]])
+            self.state_dict[state[0]].expand(self.state_dict[state[1]])
             self.quantum_board[x][y] = self._en_move(state)
     
     # Function to be called from outside when a measurement is made

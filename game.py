@@ -69,13 +69,11 @@ pygame.display.set_caption("Qthello")
  
 # Loop until the user clicks the close button.
 done = False
-<<<<<<< HEAD
-=======
+
 ismeasured = [[0 for i in range(8) if i]]
 # Set the font
 font=pygame.font.SysFont('arial', 30)
 font2=pygame.font.SysFont('arial', 20)
->>>>>>> a78bfdbaf608896bd92bcd8095a446a4380c86ef
 
 #initialize game-tracking variables
 measured = np.zeros((8,8))
