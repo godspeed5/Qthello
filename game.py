@@ -1,7 +1,7 @@
 import pygame
-from qiskit import *
 from pygame.locals import *
 import numpy as np
+from quantum_part import *
 """
  Example program to show using an array to back a grid on-screen.
  
@@ -12,8 +12,14 @@ import numpy as np
  
  Explanation video: http://youtu.be/mdTeqiWyFnc
 """
- 
 # Define some colors
+def countDigit(n): 
+    count = 0
+    while n != 0: 
+        n //= 10
+        count+= 1
+    return count 
+
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
@@ -41,16 +47,13 @@ for row in range(10):
  
 # Set row 1, cell 5 to one. (Remember rows and
 # column numbers start at zero.)
+playable = np.ones((8,8))
 grid[4][3] = 1
 grid[3][4] = 1
 grid[4][4] = 2
 grid[3][3] = 2
 grid[8][0] = 1
 grid[8][1] = 2
-measured = np.zeros((8,8))
-for i in range(3,5):
-    for j in range(3,5):
-        measured[i][j] = 1
 
 # Initialize pygame
 pygame.init()
@@ -64,11 +67,19 @@ pygame.display.set_caption("Qthello")
  
 # Loop until the user clicks the close button.
 done = False
-ismeasured = [[0 for i in range(8) if i]]
-# Set the font
-font=pygame.font.SysFont('arial', 40)
-font2=pygame.font.SysFont('arial', 20)
 
+#initialize game-tracking variables
+measured = np.zeros((8,8))
+for i in range(3,5):
+    for j in range(3,5):
+        measured[i][j] = 1
+ismeasure = 0
+qplayed = np.zeros((8,8))
+qmax = np.ones((8,8))
+for i in [1,6]:
+    for j in [1,6]:
+        qmax[i][j] = 2
+qselected = None
 centerlist=[]
 for row in range(10):
     alist=[]
@@ -78,6 +89,12 @@ for row in range(10):
 
 bag_rects = [centerlist[9][i] for i in range(6)]
 bag_counts = [6]*6
+
+# Set the font
+font=pygame.font.SysFont('arial', 40)
+font2=pygame.font.SysFont('arial', 20)
+
+
 
 # Renders for all the gates on the board
 s_text=font.render('S', True, BLUE)
@@ -101,9 +118,9 @@ qplus_text=font2.render('|+>', True, BLUE)
 qminus_text=font2.render('|->', True, BLUE)
 q750_text = font2.render('75|0>', True, BLUE)
 q751_text = font2.render('75|1>', True, BLUE)
+
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
- 
 # -------- Main Program Loop -----------
 while not done:
     for event in pygame.event.get():  # User did something
@@ -116,6 +133,25 @@ while not done:
             column = pos[0] // (WIDTH + MARGIN)
             row = pos[1] // (HEIGHT + MARGIN)
             print("Click ", pos, "Grid coordinates: ", row, column)
+        if row == 8 and column == 7:
+            ismeasure=1
+            qselected=None
+        elif row==8 and column < 6:
+            qselected=column
+            ismeasure=0
+        elif row<8 and playable[row][column]==1:
+            if ismeasure:
+                qselected=None
+                measured[row][column]=1
+                # measurement stuff
+            if (qselected is not None) and ((countDigit(qplayed[row][column])<qmax[row][column]) or qplayed[row][column]==0):
+                qplayed[row][column] = 10*qplayed[row][column]+qselected+1
+                bag_counts[qselected] -= 1
+                qselected = None
+                #qiskit stuff
+
+
+
  
     # Set the screen background
     screen.fill(BLACK)
