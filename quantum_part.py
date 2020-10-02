@@ -3,6 +3,9 @@ from qiskit.quantum_info import Statevector
 
 import numpy as np
 
+# from qiskit.visualization import plot_histogram
+# import matplotlib.pyplot as plt
+
 class quantum_backend:
     # Constructor for class. We can probably pass the players names here
     def __init__(self, players = ["P1", "P2"]):
@@ -77,6 +80,8 @@ class quantum_backend:
         # Make measurement
         qc.measure_all()
         results = execute(qc, backend = backend, shots = shots).result().get_counts()
+        # plot_histogram(results)
+        # plt.show()
 
         # Find the measured state
         for key, _ in results.items():
@@ -105,8 +110,10 @@ class quantum_backend:
             state = self.state_dict[state[0]].expand(self.state_dict[state[1]])
             self.quantum_board[x][y] = self._cx_move(state)
         elif(move in self.en_squares):
-            self.state_dict[state[0]].expand(self.state_dict[state[1]])
-            self.quantum_board[x][y] = self._en_move(state)
+            state = self.state_dict[state[0]].expand(self.state_dict[state[1]])
+            temp = self._en_move(state)
+            self.quantum_board[x][y] = temp
+            self.quantum_board[7-x][7-y] = temp
         else:
             self.quantum_board[x][y] = self.state_dict[state]
     
