@@ -28,7 +28,7 @@ class quantum_backend:
         qm = Statevector([1/np.sqrt(2), -1/np.sqrt(2)])
         q075 = Statevector([np.sqrt(3)/2, -1/2])
         q175 = Statevector([1/2, np.sqrt(3)/2])
-        self.state_dict = {0:q0, 1:q1, 2:qp, 3:qm, 4:q075, 5:q175}
+        self.state_dict = {1:q0, 2:q1, 3:qp, 4:qm, 5:q075, 6:q175}
     
     # Function to return the state given the circuit. The circuit would have
     # already been initialised with the state played
@@ -71,7 +71,7 @@ class quantum_backend:
         backend = BasicAer.get_backend("qasm_simulator")
         shots = 1
         # Get number of qubits
-        n = np.sqrt(len(state)) # Maybe change this to log_2 later instead
+        n = state.dims
         qc = QuantumCircuit(n)
         qc.initialize(state, range(n))
         # Make measurement

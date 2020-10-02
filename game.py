@@ -12,7 +12,9 @@ from quantum_part import *
  
  Explanation video: http://youtu.be/mdTeqiWyFnc
 """
-# Define some colors
+
+qb = quantum_backend(["Dhruv", "Parth"])
+
 def countDigit(n): 
     count = 0
     while n != 0: 
@@ -20,6 +22,7 @@ def countDigit(n):
         count+= 1
     return count 
 
+# Define some colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
@@ -70,11 +73,6 @@ pygame.display.set_caption("Qthello")
 # Loop until the user clicks the close button.
 done = False
 
-ismeasured = [[0 for i in range(8) if i]]
-# Set the font
-font=pygame.font.SysFont('arial', 30)
-font2=pygame.font.SysFont('arial', 20)
-
 #initialize game-tracking variables
 measured = np.zeros((8,8))
 for i in range(3,5):
@@ -100,8 +98,6 @@ bag_counts = [6]*6
 # Set the font
 font=pygame.font.SysFont('arial', 40)
 font2=pygame.font.SysFont('arial', 20)
-
-
 
 # Renders for all the gates on the board
 en_text1=font.render('EN', True, PURPLE)
@@ -151,15 +147,12 @@ while not done:
             if ismeasure:
                 qselected=None
                 measured[row][column]=1
-                # measurement stuff
+                # measurement stuff: Add calls to measure_move
             if (qselected is not None) and ((countDigit(qplayed[row][column])<qmax[row][column]) or qplayed[row][column]==0):
                 qplayed[row][column] = 10*qplayed[row][column]+qselected+1
                 bag_counts[qselected] -= 1
                 qselected = None
-                #qiskit stuff
-
-
-
+                #qiskit stuff: Add calls to move
  
     # Set the screen background
     screen.fill(BLACK)
