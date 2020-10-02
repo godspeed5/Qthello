@@ -15,14 +15,15 @@ S: Swap (diagonals are connected)
 
 You can play a qubit or measure each turn.
 Qubits that you can play:
+
 |0>
 
 |1>
 
 |+>: (|0>+|1>)/sqrt(2)
 
-|1>: (|0>+|1>)/sqrt(2)
+|->: (|0>-|1>)/sqrt(2)
 
-75|0>: (sqrt(3)*|0>+|1>)/2
+75|0>: (sqrt(3)*|0>-|1>)/2
 
 75|1>: (sqrt(3)*|1>+|0>)/2
