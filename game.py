@@ -147,12 +147,12 @@ while not done:
             if ismeasure:
                 qselected=None
                 measured[row][column]=1
-                # measurement stuff: Add calls to measure_move
+                # measurement stuff: Add calls to measure_move:eg:qb.measurement_move([row,column])
             if (qselected is not None) and ((countDigit(qplayed[row][column])<qmax[row][column]) or qplayed[row][column]==0):
                 qplayed[row][column] = 10*qplayed[row][column]+qselected+1
                 bag_counts[qselected] -= 1
                 qselected = None
-                #qiskit stuff: Add calls to move
+                #qiskit stuff: Add calls to move:eq:qb.move([row,column], qplayed[row][column])
  
     # Set the screen background
     screen.fill(BLACK)

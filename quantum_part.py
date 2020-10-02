@@ -5,7 +5,7 @@ import numpy as np
 
 class quantum_backend:
     # Constructor for class. We can probably pass the players names here
-    def __init__(self, players):
+    def __init__(self, players = ["P1", "P2"]):
         N = 8
         self.player1 = players[0]
         self.player2 = players[1]
