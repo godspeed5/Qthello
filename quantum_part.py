@@ -5,8 +5,8 @@ import numpy as np
 
 class quantum_backend:
     # Constructor for class. We can probably pass the players names here
-    def __init__(self, players, N = 8):
-        self.N = N
+    def __init__(self, players):
+        N = 8
         self.player1 = players[0]
         self.player2 = players[1]
 
@@ -19,7 +19,7 @@ class quantum_backend:
         self.h_squares = [[0,2],[0,5],[2,0],[5,0],[2,7],[5,7],[7,2],[7,5]]
         self.x_squares = [[2,2],[2,5],[5,2],[5,5]]
         self.cx_squares = [[1,1],[1,6],[6,1],[6,6]]
-        self.s_squares = [[0,0],[0,7],[7,0],[7,7]]
+        self.en_squares = [[0,0],[0,7],[7,0],[7,7]]
 
         # States corresponding to what the player chooses
         q0 = Statevector([1,0])
@@ -62,7 +62,8 @@ class quantum_backend:
     def _en_move(self, state):
         qc = QuantumCircuit(2)
         qc.initialize(state, [0,1])
-        qc.swap(0, 1)
+        qc.h(0)
+        qc.cx(0,1)
         return self._get_state(qc)
     
     # When a player makes a measurement
@@ -76,34 +77,44 @@ class quantum_backend:
         # Make measurement
         qc.measure_all()
         results = execute(qc, backend = backend, shots = shots).result().get_counts()
-        disc = None
-        # Find the corresponding "disc"
+        bit = None
+        # Find the corresponding "bit"
         for key, _ in results.items():
-            disc = key.count("1")%2
-        return disc
+            bit = key.count("1")%2
+        return bit
 
     # Function to be called from outside when a move is played that is not a
     # measurement
+    # Move is a list in the form [x,y] where x,y are the co-ordinates on the 
+    # grid
+    # State is the qubit played from the "bag". May be anything from 0-5. The
+    # corresponding state is stored in a dictionary
     def move(self, move, state):
         x = move[0]
         y = move[1]
+
+        # For one qubit gates just use the qubit selected
         if(move in self.h_squares):
             state = self.state_dict[state]
             self.quantum_board[x][y] = self._h_move(state)
         elif(move in self.x_squares):
             state = self.state_dict[state]
             self.quantum_board[x][y] = self._x_move(state)
+        
+        # For 2 qubit gates take tensor product of both the qubits
         elif(move in self.cx_squares):
             state = self.state_dict[state[0]].expand(self.state_dict[state[1]])
             self.quantum_board[x][y] = self._cx_move(state)
-        elif(move in self.s_squares):
+        elif(move in self.en_squares):
             self.state_dict[state[0]].expand(self.state_dict[state[1]])
             self.quantum_board[x][y] = self._en_move(state)
     
     # Function to be called from outside when a measurement is made
+    # Move is a list in the form [x,y] where x,y are the co-ordinates on the 
+    # grid
     def measurement_move(self, move):
         x = move[0]
         y = move[1]
-        self.classical_board[x][y] = self._get_measurement( \
-                                    self.quantum_board[x][y])
+        self.classical_board[x][y] = \
+        self._get_measurement(self.quantum_board[x][y])
 
