@@ -25,6 +25,8 @@ WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
+PURPLE = (144,0,144)
+PINK = (188,0,100)
 LG = (144,238,144)
 GRAY = (200,200,200)
  
@@ -67,6 +69,13 @@ pygame.display.set_caption("Qthello")
  
 # Loop until the user clicks the close button.
 done = False
+<<<<<<< HEAD
+=======
+ismeasured = [[0 for i in range(8) if i]]
+# Set the font
+font=pygame.font.SysFont('arial', 30)
+font2=pygame.font.SysFont('arial', 20)
+>>>>>>> a78bfdbaf608896bd92bcd8095a446a4380c86ef
 
 #initialize game-tracking variables
 measured = np.zeros((8,8))
@@ -97,8 +106,9 @@ font2=pygame.font.SysFont('arial', 20)
 
 
 # Renders for all the gates on the board
-s_text=font.render('S', True, BLUE)
-s_rects=[centerlist[0][0],centerlist[0][7],centerlist[7][0],centerlist[7][7]]
+en_text1=font.render('EN', True, PURPLE)
+en_text2=font.render('EN', True, PURPLE)
+en_rects=[centerlist[0][0],centerlist[0][7],centerlist[7][0],centerlist[7][7]]
 
 cx_text=font.render('CX', True, BLUE)
 cx_rects=[centerlist[1][1],centerlist[1][6],centerlist[6][1],centerlist[6][6]]
@@ -218,8 +228,11 @@ while not done:
                               (MARGIN + HEIGHT) * row1 + MARGIN,
                               WIDTH,
                               HEIGHT])
-            for rect in s_rects:
-            	screen.blit(s_text, rect)
+            for i, rect in enumerate(en_rects):
+                if(i%3==0):
+            	    screen.blit(en_text1, rect)
+                else:
+                    screen.blit(en_text2, rect)
             
             for rect in cx_rects:
             	screen.blit(cx_text, rect)
