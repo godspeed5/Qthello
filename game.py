@@ -21,6 +21,13 @@ def countDigit(n):
         n //= 10
         count+= 1
     return count 
+def isvalid(matrix, row, column):
+       adjlist=[]
+       for i in range(row-1, row+2):
+               for j in range(column-1, column+2):
+                       if (i in range(8)) and (j in range(8)):
+                               adjlist.append(matrix[i][j])
+       return np.any([i>0 for i in adjlist])
 
 # Define some colors
 BLACK = (0, 0, 0)
@@ -81,6 +88,12 @@ for i in range(3,5):
         measured[i][j] = 1
 ismeasure = 0
 qplayed = np.zeros((8,8))
+for i in range(3,5):
+    for j in range(3,5):
+       if i==j:
+               qplayed[i][j] = 2
+       else:
+               qplayed[i][j] = 1
 qmax = np.ones((8,8))
 for i in [1,6]:
     for j in [1,6]:
@@ -157,7 +170,7 @@ while not done:
                 movenumber+=1
                 ismeasure = 0
                 # measurement stuff: Add calls to measure_move:eg:qb.measurement_move([row,column])
-            if (qselected is not None) and bag_counts[movenumber%2][qselected]>0 and ((countDigit(qplayed[row][column])<qmax[row][column]) or ([row,column] in [[3,5],[5,5],[3,3],[5,3]])):
+            if (qselected is not None) and bag_counts[movenumber%2][qselected]>0 and ((countDigit(qplayed[row][column])<qmax[row][column]) or ([row,column] in [[3,5],[5,5],[3,3],[5,3]])) and isvalid(qplayed, row, column):
                 qplayed[row][column] = 10*qplayed[row][column]+qselected+1
                 bag_counts[movenumber%2][qselected] -= 1
                 grid[row][column] = 10+qselected
@@ -193,7 +206,7 @@ while not done:
                               WIDTH,
                               HEIGHT])
             if row1<8:
-            	if countDigit(qplayed[row1][column1])==1:
+            	if (countDigit(qplayed[row1][column1])==1 and measured[row1][column1]==0):
 	            	pygame.draw.rect(screen,
 	            		LG,
 	            		[(MARGIN + WIDTH) * column1 + MARGIN,
@@ -206,7 +219,7 @@ while not done:
 	                	(MARGIN + HEIGHT) * row1 + MARGIN,
 	                	WIDTH*(1-fracts[grid[row1][column1]-10]),
 	                	HEIGHT])
-            	elif countDigit(qplayed[row1][column1])>1:
+            	elif countDigit(qplayed[row1][column1])>1 and measured[row1][column1]==0:
             		pygame.draw.rect(screen,
 	            		LG,
 	            		[(MARGIN + WIDTH) * column1 + MARGIN,
