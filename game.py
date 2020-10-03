@@ -141,6 +141,9 @@ while not done:
             column = pos[0] // (WIDTH + MARGIN)
             row = pos[1] // (HEIGHT + MARGIN)
             print("Click ", pos, "Grid coordinates: ", row, column)
+
+        else: continue
+        
         if row == 8 and column == 7:
             ismeasure=1
             qselected=None
@@ -152,6 +155,7 @@ while not done:
                 qselected=None
                 measured[row][column]=1
                 movenumber+=1
+                ismeasure = 0
                 # measurement stuff: Add calls to measure_move:eg:qb.measurement_move([row,column])
             if (qselected is not None) and bag_counts[movenumber%2][qselected]>0 and ((countDigit(qplayed[row][column])<qmax[row][column]) or ([row,column] in [[3,5],[5,5],[3,3],[5,3]])):
                 qplayed[row][column] = 10*qplayed[row][column]+qselected+1
