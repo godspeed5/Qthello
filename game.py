@@ -143,7 +143,7 @@ while not done:
             print("Click ", pos, "Grid coordinates: ", row, column)
 
         else: continue
-        
+
         if row == 8 and column == 7:
             ismeasure=1
             qselected=None
@@ -206,9 +206,7 @@ while not done:
 	                	(MARGIN + HEIGHT) * row1 + MARGIN,
 	                	WIDTH*(1-fracts[grid[row1][column1]-10]),
 	                	HEIGHT])
-            
-            if row1<8:
-            	if countDigit(qplayed[row1][column1])>1:
+            	elif countDigit(qplayed[row1][column1])>1:
             		pygame.draw.rect(screen,
 	            		LG,
 	            		[(MARGIN + WIDTH) * column1 + MARGIN,
