@@ -178,6 +178,7 @@ while not done:
                 grid[row][column]=int(qb.classical_board[row][column]+1)
                 if([row,column] in qb.en_squares):
                     grid[7-row][7-column] = int(qb.classical_board[7-row][7-column]+1)
+                    measured[7-row][7-column] = 1
 
             # Else if user has selected a qubit that is present in the bag, and user chooses a valid position
             elif (qselected is not None) and bag_counts[movenumber%2][qselected]>0 and ((countDigit(qplayed[row][column])<qmax[row][column]) or ([row,column] in [[3,5],[5,5],[3,3],[5,3]])) and isvalid(qplayed, row, column):
