@@ -29,6 +29,20 @@ def isvalid(matrix, row, column):
                                adjlist.append(matrix[i][j])
        return np.any([i>0 for i in adjlist])
 
+def findflanks(matrix, measured, row, column):
+	connected_right = []
+	connected_left = []
+	connected_up = []
+	connected_down = []
+	connected_ru = []
+	connected_rd = []
+	connected_lu = []
+	connected_ld = []
+	for i in range(row, 8):
+		if measured[i, column] == 1:
+			connected_right.append()
+
+
 # Define some colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
