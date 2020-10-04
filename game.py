@@ -97,13 +97,13 @@ def findflanksandflip(measured, row, column):
 
 
 	for entries in [connected_right, connected_left, connected_up, connected_down, connected_ld, connected_lu, connected_rd, connected_ru]:
-		print(entries)
+		# print(entries)
 		
 		if len(entries)>1:
 			if measured[entries[-1][0]][entries[-1][1]]==measured[row][column]:
 				for a in entries[:-1]:
 					flip(measured,a[0],a[1])
-		print(measured)
+		# print(measured)
 def flip(matrix, row, column):
 	matrix[row][column] = int(not(matrix[row][column]-1))+1
 
@@ -191,7 +191,7 @@ for i in [0,7]:
 for i in range(3,5):
     for j in range(3,5):
         qmax[i][j] = 0
-print(qmax)
+# print(qmax)
 qselected = None
 centerlist=[]
 for row in range(10):
