@@ -3,8 +3,8 @@ from qiskit.quantum_info import Statevector
 
 import numpy as np
 
-# from qiskit.visualization import plot_histogram
-# import matplotlib.pyplot as plt
+from qiskit.visualization import plot_histogram
+import matplotlib.pyplot as plt
 
 class quantum_backend:
     # Constructor for class. We can probably pass the players names here
@@ -17,6 +17,10 @@ class quantum_backend:
         # Other one to store the values after measurement
         self.quantum_board = [[None]*N for _ in range(N)]
         self.classical_board = np.zeros([N, N])
+        self.classical_board[4][3] = 1
+        self.classical_board[3][4] = 1
+        self.classical_board[4][4] = 2
+        self.classical_board[3][3] = 2
 
         # Store the positions of the gates
         self.h_squares = [[0,2],[0,5],[2,0],[5,0],[2,7],[5,7],[7,2],[7,5]]
@@ -94,6 +98,7 @@ class quantum_backend:
     # State is the qubit played from the "bag". May be anything from 0-5. The
     # corresponding state is stored in a dictionary
     def move(self, move, state):
+        print(state)
         x = move[0]
         y = move[1]
 
@@ -107,10 +112,10 @@ class quantum_backend:
         
         # For 2 qubit gates take tensor product of both the qubits
         elif(move in self.cx_squares):
-            state = self.state_dict[state[0]].expand(self.state_dict[state[1]])
+            state = self.state_dict[state//10].expand(self.state_dict[state%10])
             self.quantum_board[x][y] = self._cx_move(state)
         elif(move in self.en_squares):
-            state = self.state_dict[state[0]].expand(self.state_dict[state[1]])
+            state = self.state_dict[state//10].expand(self.state_dict[state%10])
             temp = self._en_move(state)
             self.quantum_board[x][y] = temp
             self.quantum_board[7-x][7-y] = temp

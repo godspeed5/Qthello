@@ -153,7 +153,7 @@ while not done:
             # Change the x/y screen coordinates to grid coordinates
             column = pos[0] // (WIDTH + MARGIN)
             row = pos[1] // (HEIGHT + MARGIN)
-            print("Click ", pos, "Grid coordinates: ", row, column)
+            # print("Click ", pos, "Grid coordinates: ", row, column)
 
         else: continue
 
@@ -164,23 +164,31 @@ while not done:
             qselected=column
             ismeasure=0
         elif row<8 and playable[row][column]==1:
-            if ismeasure:
+            # If user selected measure before this and the square he chose now has been played at and measurement has not been made there already
+            if ismeasure and qplayed[row][column] != 0 and measured[row][column] == 0:
                 qselected=None
                 measured[row][column]=1
                 movenumber+=1
                 ismeasure = 0
-                # measurement stuff: Add calls to measure_move:eg:qb.measurement_move([row,column])
-            if (qselected is not None) and bag_counts[movenumber%2][qselected]>0 and ((countDigit(qplayed[row][column])<qmax[row][column]) or ([row,column] in [[3,5],[5,5],[3,3],[5,3]])) and isvalid(qplayed, row, column):
+                # measurement stuff: Call to measure move:
+                qb.measurement_move([row,column])
+                grid[row][column]=qb.classical_board[row][column]+1
+
+            # Else if user has selected a qubit that is present in the bag, and user chooses a valid position
+            elif (qselected is not None) and bag_counts[movenumber%2][qselected]>0 and ((countDigit(qplayed[row][column])<qmax[row][column]) or ([row,column] in [[3,5],[5,5],[3,3],[5,3]])) and isvalid(qplayed, row, column):
                 qplayed[row][column] = 10*qplayed[row][column]+qselected+1
                 bag_counts[movenumber%2][qselected] -= 1
                 grid[row][column] = 10+qselected
                 qselected = None
                 movenumber+=1
                 ismeasure=0
-                print(movenumber)
-                print(bag_counts)
+                # print(movenumber)
+                # print(bag_counts)
                 
-                #qiskit stuff: Add calls to move:eq:qb.move([row,column], qplayed[row][column])
+                #qiskit stuff: Call to move:
+                if(countDigit(qplayed[row][column])==qmax[row][column]):
+                    qb.move([row,column], qplayed[row][column])
+            else: continue
  
     # Set the screen background
     screen.fill(BLACK)
