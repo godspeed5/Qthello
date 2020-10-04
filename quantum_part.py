@@ -98,7 +98,6 @@ class quantum_backend:
     # State is the qubit played from the "bag". May be anything from 0-5. The
     # corresponding state is stored in a dictionary
     def move(self, move, state):
-        print(state)
         x = move[0]
         y = move[1]
 

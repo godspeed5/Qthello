@@ -165,7 +165,7 @@ while not done:
             ismeasure=0
         elif row<8 and playable[row][column]==1:
             # If user selected measure before this and the square he chose now has been played at and measurement has not been made there already
-            if ismeasure and qplayed[row][column] != 0 and measured[row][column] == 0:
+            if ismeasure and qplayed[row][column] != 0 and measured[row][column] == 0 and (countDigit(qplayed[row][column])==qmax[row][column]):
                 qselected=None
                 measured[row][column]=1
                 movenumber+=1
