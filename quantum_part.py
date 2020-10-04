@@ -129,7 +129,7 @@ class quantum_backend:
         y = move[1]
         out_state = self._get_measurement(self.quantum_board[x][y])
         if move in self.en_squares:
-            self.classical_board[x][y] = int(out_state[1])
-            self.classical_board[7-x][7-y] = int(out_state[0])
+            self.classical_board[x][y] = int(out_state[1])+1
+            self.classical_board[7-x][7-y] = int(out_state[0])+1
         else:
-            self.classical_board[x][y] = out_state.count("1")%2
+            self.classical_board[x][y] = (out_state.count("1")%2)+1

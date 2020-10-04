@@ -189,9 +189,9 @@ while not done:
                 ismeasure = 0
                 # measurement stuff: Call to measure move:
                 qb.measurement_move([row,column])
-                grid[row][column]=int(qb.classical_board[row][column]+1)
+                grid[row][column]=int(qb.classical_board[row][column])
                 if([row,column] in qb.en_squares):
-                    grid[7-row][7-column] = int(qb.classical_board[7-row][7-column]+1)
+                    grid[7-row][7-column] = int(qb.classical_board[7-row][7-column])
                     measured[7-row][7-column] = 1
 
             # Else if user has selected a qubit that is present in the bag, and user chooses a valid position
