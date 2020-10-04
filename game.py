@@ -98,6 +98,9 @@ qmax = np.ones((8,8))
 for i in [1,6]:
     for j in [1,6]:
         qmax[i][j] = 2
+for i in [0,7]:
+    for j in [0,7]:
+        qmax[i][j] = 2
 for i in range(3,5):
     for j in range(3,5):
         qmax[i][j] = 0
@@ -172,13 +175,18 @@ while not done:
                 ismeasure = 0
                 # measurement stuff: Call to measure move:
                 qb.measurement_move([row,column])
-                grid[row][column]=qb.classical_board[row][column]+1
+                grid[row][column]=int(qb.classical_board[row][column]+1)
+                if([row,column] in qb.en_squares):
+                    grid[7-row][7-column] = int(qb.classical_board[7-row][7-column]+1)
 
             # Else if user has selected a qubit that is present in the bag, and user chooses a valid position
             elif (qselected is not None) and bag_counts[movenumber%2][qselected]>0 and ((countDigit(qplayed[row][column])<qmax[row][column]) or ([row,column] in [[3,5],[5,5],[3,3],[5,3]])) and isvalid(qplayed, row, column):
                 qplayed[row][column] = 10*qplayed[row][column]+qselected+1
                 bag_counts[movenumber%2][qselected] -= 1
                 grid[row][column] = 10+qselected
+                if([row,column] in qb.en_squares):
+                    qplayed[7-row][7-column] = qplayed[row][column]
+                    grid[7-row][7-column] = grid[row][column]
                 qselected = None
                 movenumber+=1
                 ismeasure=0
@@ -252,8 +260,6 @@ while not done:
 	                	(MARGIN + HEIGHT) * row1 + MARGIN+HEIGHT*(fracts[grid[row1][column1]-10]),
 	                	WIDTH/2,
 	                	HEIGHT*(1-fracts[grid[row1][column1]-10])])
-
-
 
             if row1==8:
                 if(column1==2 or column1 == 3):
