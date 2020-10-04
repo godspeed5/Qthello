@@ -29,7 +29,7 @@ def isvalid(matrix, row, column):
                                adjlist.append(matrix[i][j])
        return np.any([i>0 for i in adjlist])
 
-def findflanks(matrix, measured, row, column):
+def findflanksandflip(measured, row, column):
 	connected_right = []
 	connected_left = []
 	connected_up = []
@@ -38,10 +38,83 @@ def findflanks(matrix, measured, row, column):
 	connected_rd = []
 	connected_lu = []
 	connected_ld = []
-	for i in range(row, 8):
-		if measured[i, column] == 1:
-			connected_right.append()
+	for i in range(row+1, 8):
+		if measured[i][column]==1  or measured[i][column]==2:
+			connected_down.append([i,column])
+			if measured[i][column]==measured[row][column]:
+				break
+		else:
+			break
+	for i in reversed(range(0, row)):
+		if measured[i][column]==1  or measured[i][column]==2:
+			connected_up.append([i,column])
+			if measured[i][column]==measured[row][column]:
+				break
+		else:
+			break
+	for i in reversed(range(0, column)):
+		if measured[row][i]==1  or measured[row][i]==2:
+			connected_left.append([row,i])
+			if measured[row][i]==measured[row][column]:
+				break
+		else:
+			break
+	for i in range(column+1, 8):
+		if measured[row][i]==1  or measured[row][i]==2:
+			connected_right.append([row,i])
+			if measured[row][i]==measured[row][column]:
+				break
+		else:
+			break
+	for i in range(1,min(row+1,column+1)):
+		if measured[row-i][column-i]==1  or measured[row-i][column-i]==2:
+			connected_lu.append([row-i,column-i])
+			if measured[row-i][column-i]==measured[row][column]:
+				break
+		else:
+			break
+	for i in range(1,min(row+1,8-column)):
+		if measured[row-i][column+i]==1  or measured[row-i][column+i]==2:
+			connected_ru.append([row-i,column+i])
+			if measured[row-i][column+i]==measured[row][column]:
+				break
+		else:
+			break
+	for i in range(1,min(8-row,8-column)):
+		if measured[row+i][column+i]==1  or measured[row+i][column+i]==2:
+			connected_rd.append([row+i,column+i])
+			if measured[row+i][column+i]==measured[row][column]:
+				break
+		else:
+			break
+	for i in range(1,min(8-row,column+1)):
+		if measured[row+i][column-i]==1  or measured[row+i][column-i]==2:
+			connected_ld.append([row+i,column-i])
+			if measured[row+i][column-i]==measured[row][column]:
+				break
+		else:
+			break
 
+
+	for entries in [connected_right, connected_left, connected_up, connected_down, connected_ld, connected_lu, connected_rd, connected_ru]:
+		print(entries)
+		
+		if len(entries)>1:
+			if measured[entries[-1][0]][entries[-1][1]]==measured[row][column]:
+				for a in entries[:-1]:
+					flip(measured,a[0],a[1])
+		print(measured)
+def flip(matrix, row, column):
+	matrix[row][column] = int(not(matrix[row][column]-1))+1
+
+def wincondition(classical_board):
+	if not np.any(classical_board==0):
+		if np.sum(classical_board==2)>np.sum(classical_board==1):
+			print('P2 wins')
+		elif np.sum(classical_board==1)>np.sum(classical_board==2):
+			print('P1 wins')
+		else:
+			print('Tie')
 
 # Define some colors
 BLACK = (0, 0, 0)
@@ -118,6 +191,7 @@ for i in [0,7]:
 for i in range(3,5):
     for j in range(3,5):
         qmax[i][j] = 0
+print(qmax)
 qselected = None
 centerlist=[]
 for row in range(10):
@@ -189,10 +263,12 @@ while not done:
                 ismeasure = 0
                 # measurement stuff: Call to measure move:
                 qb.measurement_move([row,column])
+                findflanksandflip(qb.classical_board, row, column)
                 grid[row][column]=int(qb.classical_board[row][column])
                 if([row,column] in qb.en_squares):
                     grid[7-row][7-column] = int(qb.classical_board[7-row][7-column])
                     measured[7-row][7-column] = 1
+                    print(qmax)
 
             # Else if user has selected a qubit that is present in the bag, and user chooses a valid position
             elif (qselected is not None) and bag_counts[movenumber%2][qselected]>0 and ((countDigit(qplayed[row][column])<qmax[row][column]) or ([row,column] in [[3,5],[5,5],[3,3],[5,3]])) and isvalid(qplayed, row, column):
@@ -205,6 +281,7 @@ while not done:
                 qselected = None
                 movenumber+=1
                 ismeasure=0
+                print(qmax)
                 # print(movenumber)
                 # print(bag_counts)
                 
@@ -237,6 +314,14 @@ while not done:
                               WIDTH,
                               HEIGHT])
             if row1<8:
+            	if qb.classical_board[row1][column1] > 0:
+            		color = [GREEN, BLACK]
+            		pygame.draw.rect(screen,
+                             color[int(qb.classical_board[row1][column1])-1],
+                             [(MARGIN + WIDTH) * column1 + MARGIN,
+                              (MARGIN + HEIGHT) * row1 + MARGIN,
+                              WIDTH,
+                              HEIGHT])
             	if (countDigit(qplayed[row1][column1])==1 and measured[row1][column1]==0):
 	            	pygame.draw.rect(screen,
 	            		LG,
@@ -348,6 +433,8 @@ while not done:
             screen.blit(qminus_text, centerlist[8][3])
             screen.blit(q750_text, centerlist[8][4])
             screen.blit(q751_text, centerlist[8][5])
+    wincondition(qb.classical_board)
+	
 
  
     # Limit to 60 frames per second
