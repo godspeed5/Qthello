@@ -9,7 +9,7 @@ pip install qiskit
 
 pip install pygame
 
-After this you can just run python game.py to play the game. Choose whether you want to play single or 2 players.
+After this you can just run python game.py to play the game. Choose whether you want to play single or 2 players at the input prompt on terminal.
 
 # Rules:
 
