@@ -283,6 +283,7 @@ while not done:
                 if([row,column] in qb.en_squares):
                     grid[7-row][7-column] = int(qb.classical_board[7-row][7-column])
                     measured[7-row][7-column] = 1
+                    findflanksandflip(qb.classical_board, 7-row, 7-column)
                     try:
                         ra.all_pos.remove((7-row,7-column))
                     except:None
