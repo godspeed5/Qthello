@@ -13,6 +13,7 @@ from random_agent import random_agent
  
  Explanation video: http://youtu.be/mdTeqiWyFnc
 """
+numplayers = int(input('Enter number of players (1 for play against Computer), 2 for MultiPlayer\n'))
 
 qb = quantum_backend()
 ra = random_agent()
@@ -112,9 +113,9 @@ def flip(matrix, row, column):
 def wincondition(classical_board):
 	if not np.any(classical_board==0):
 		if np.sum(classical_board==2)>np.sum(classical_board==1):
-			print('P2 wins');exit(0)
+			print('P2 (Black) wins');exit(0)
 		elif np.sum(classical_board==1)>np.sum(classical_board==2):
-			print('P1 wins');exit(0)
+			print('P1 (Green) wins');exit(0)
 		else:
 			print('Tie');exit(0)
 
@@ -239,7 +240,7 @@ clock = pygame.time.Clock()
 while not done:
     for event in pygame.event.get():  # User did something
         # print(movenumber)
-        if(movenumber%2 == ra.p_number):
+        if(movenumber%2 == ra.p_number) and numplayers==1:
             m = ra.ret_move(isvalid, bag_counts, measured, qplayed)
             row, column = ra.pos[0], ra.pos[1]
             # print(ra.pos, m)
@@ -259,7 +260,7 @@ while not done:
             row = pos[1] // (HEIGHT + MARGIN)
             # print("Click ", pos, "Grid coordinates: ", row, column)
 
-        elif(movenumber%2 != ra.p_number): continue
+        elif(movenumber%2 != ra.p_number) and numplayers==1: continue
 
         if row == 8 and column == 7:
             ismeasure=1
@@ -453,7 +454,12 @@ while not done:
             screen.blit(q750_text, centerlist[8][4])
             screen.blit(q751_text, centerlist[8][5])
     wincondition(qb.classical_board)
-	
+    a = np.zeros((8,8))
+    for row in range(8):
+    	for column in range(8):
+    		a[row][column] = countDigit(qplayed[row][column])
+    if (np.all(bag_counts[movenumber%2]==0) and (not np.any(a<qmax))):
+    	movenumber+=1
 
  
     # Limit to 60 frames per second
