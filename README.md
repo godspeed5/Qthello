@@ -46,3 +46,7 @@ Qubits that you can play:
 75|0>: (sqrt(3)*|0>-|1>)/2
 
 75|1>: (sqrt(3)*|1>+|0>)/2
+
+# How to play:
+Click on the qubit you want to play from the second last row of the screen. The last row shows the number of qubits of a particular state left. After choosing the qubit, click on the tile you want to place it on. If you want to measure, click on the "m" button, and then the place you want to measure.
+A turn change is indicated by the color of the number of qubits in the last row. You can measure only after a tile has been filled with a qubit, and in the case of 2 qubit gates, 2 qubits must have been played on the tile.
