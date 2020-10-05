@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 import numpy as np
 from quantum_part import *
+from random_agent import random_agent
 """
  Example program to show using an array to back a grid on-screen.
  
@@ -14,6 +15,7 @@ from quantum_part import *
 """
 
 qb = quantum_backend()
+ra = random_agent()
 
 def countDigit(n): 
     count = 0
@@ -236,6 +238,16 @@ clock = pygame.time.Clock()
 # -------- Main Program Loop -----------
 while not done:
     for event in pygame.event.get():  # User did something
+        # print(movenumber)
+        if(movenumber%2 == ra.p_number):
+            pos, m = ra.ret_move(isvalid, bag_counts, measured, qplayed)
+            row, column = pos[0], pos[1]
+            if(m == 0):
+                ismeasure = 1
+            else:
+                qselected = m-1
+            
+
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -246,7 +258,7 @@ while not done:
             row = pos[1] // (HEIGHT + MARGIN)
             # print("Click ", pos, "Grid coordinates: ", row, column)
 
-        else: continue
+        elif(movenumber%2 != ra.p_number): continue
 
         if row == 8 and column == 7:
             ismeasure=1
@@ -271,7 +283,7 @@ while not done:
                     # print(qmax)
 
             # Else if user has selected a qubit that is present in the bag, and user chooses a valid position
-            elif (qselected is not None) and bag_counts[movenumber%2][qselected]>0 and ((countDigit(qplayed[row][column])<qmax[row][column])) and isvalid(qplayed, row, column): #or ([row,column] in [[3,4],[4,4],[3,3],[4,3]])
+            elif (qselected is not None) and bag_counts[movenumber%2][qselected]>0 and ((countDigit(qplayed[row][column])<qmax[row][column])) and isvalid(qplayed, row, column):
                 qplayed[row][column] = 10*qplayed[row][column]+qselected+1
                 bag_counts[movenumber%2][qselected] -= 1
                 grid[row][column] = 10+qselected
