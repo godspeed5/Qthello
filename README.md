@@ -7,6 +7,10 @@ Connectedness: You must play qubits such that one of the nearest neighbours has 
 
 If you do not have any valid moves left, the move passes to the other player.
 
+For 2 qubit gates, the first qubit played is control, while the second is target.
+For the CX gates, the two qubit output is mapped to a single output: "00","11" to 0(green), "01","10" to 1(black).
+The EN gates are special, in the sense that the move is played on both ends of the the board. The measurement collapses in the same order as played.
+
 Gates on board:
 
 X: NOT 
