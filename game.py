@@ -191,9 +191,7 @@ for i in [1,6]:
 for i in [0,7]:
     for j in [0,7]:
         qmax[i][j] = 2
-for i in range(3,5):
-    for j in range(3,5):
-        qmax[i][j] = 0
+
 # print(qmax)
 qselected = None
 centerlist=[]
@@ -204,7 +202,7 @@ for row in range(10):
     centerlist.append(alist)
 
 bag_rects = [centerlist[9][i] for i in range(6)]
-bag_counts = np.ones((2,6))*1
+bag_counts = np.ones((2,6))*6
 
 # Set the font
 font=pygame.font.SysFont('arial', 40)
@@ -234,7 +232,7 @@ qminus_text=font2.render('|->', True, BLUE)
 q750_text = font2.render('75|0>', True, BLUE)
 q751_text = font2.render('75|1>', True, BLUE)
 
-print(qmax)
+# print(qmax)
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 # -------- Main Program Loop -----------
@@ -261,7 +259,7 @@ while not done:
             row = pos[1] // (HEIGHT + MARGIN)
             # print("Click ", pos, "Grid coordinates: ", row, column)
 
-        elif(movenumber%2 != ra.p_number) and numplayers==1: continue
+        elif((movenumber%2 != ra.p_number) and numplayers==1) or numplayers==2: continue
 
         if row == 8 and column == 7:
             ismeasure=1
