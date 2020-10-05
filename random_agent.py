@@ -9,17 +9,16 @@ class random_agent:
         self.all_pos = []
         for i in product(range(0,8,1),repeat = 2):
             self.all_pos += [i]
-        print(self.all_pos)
         for i in [(3,3),(3,4),(4,3),(4,4)]:
             self.all_pos.remove(i)
-        print(self.all_pos)
+        # print(len(self.all_pos))
     
     def choose_pos(self, isvalid, qplayed):
         x, y = self.all_pos[np.random.randint(0, len(self.all_pos))]
         while(isvalid(qplayed, x, y)!=1):
             x, y = self.all_pos[np.random.randint(0, len(self.all_pos))]
-            print(self.pos)
-        print(self.pos)
+            # print(self.pos)
+        # print(len(self.all_pos))
         self.pos = [x,y]
     
     def ret_move(self, isvalid, bag, measured, qplayed):
@@ -31,13 +30,11 @@ class random_agent:
             if(measured[self.pos[0], self.pos[1]] == 1):
                 self.choose_pos(isvalid, qplayed)
                 continue
-            self.all_pos.remove((self.pos[0], self.pos[1]))
-            print(self.all_pos)
-            return self.pos, 0
+            return 0
         qubit = 0
         while(i == 0):
             qubit = np.random.randint(1,7)
             if bag[self.p_number][qubit-1] == 0:
                 continue
             i = 1
-        return self.pos,qubit
+        return qubit

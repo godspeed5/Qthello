@@ -112,11 +112,11 @@ def flip(matrix, row, column):
 def wincondition(classical_board):
 	if not np.any(classical_board==0):
 		if np.sum(classical_board==2)>np.sum(classical_board==1):
-			print('P2 wins')
+			print('P2 wins');exit(0)
 		elif np.sum(classical_board==1)>np.sum(classical_board==2):
-			print('P1 wins')
+			print('P1 wins');exit(0)
 		else:
-			print('Tie')
+			print('Tie');exit(0)
 
 # Define some colors
 BLACK = (0, 0, 0)
@@ -240,8 +240,9 @@ while not done:
     for event in pygame.event.get():  # User did something
         # print(movenumber)
         if(movenumber%2 == ra.p_number):
-            pos, m = ra.ret_move(isvalid, bag_counts, measured, qplayed)
-            row, column = pos[0], pos[1]
+            m = ra.ret_move(isvalid, bag_counts, measured, qplayed)
+            row, column = ra.pos[0], ra.pos[1]
+            # print(ra.pos, m)
             if(m == 0):
                 ismeasure = 1
             else:
@@ -271,16 +272,22 @@ while not done:
             if ismeasure and qplayed[row][column] != 0 and measured[row][column] == 0 and (countDigit(qplayed[row][column])==qmax[row][column]):
                 qselected=None
                 measured[row][column]=1
-                movenumber+=1
                 ismeasure = 0
                 # measurement stuff: Call to measure move:
                 qb.measurement_move([row,column])
                 findflanksandflip(qb.classical_board, row, column)
                 grid[row][column]=int(qb.classical_board[row][column])
+                try:
+                    ra.all_pos.remove((row,column))
+                except:None
                 if([row,column] in qb.en_squares):
                     grid[7-row][7-column] = int(qb.classical_board[7-row][7-column])
                     measured[7-row][7-column] = 1
+                    try:
+                        ra.all_pos.remove((7-row,7-column))
+                    except:None
                     # print(qmax)
+                movenumber+=1
 
             # Else if user has selected a qubit that is present in the bag, and user chooses a valid position
             elif (qselected is not None) and bag_counts[movenumber%2][qselected]>0 and ((countDigit(qplayed[row][column])<qmax[row][column])) and isvalid(qplayed, row, column):
