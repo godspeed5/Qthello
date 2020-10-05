@@ -149,7 +149,7 @@ for row in range(10):
  
 # Set row 1, cell 5 to one. (Remember rows and
 # column numbers start at zero.)
-playable = np.ones((8,8))
+
 grid[4][3] = 1
 grid[3][4] = 1
 grid[4][4] = 2
@@ -204,7 +204,7 @@ for row in range(10):
     centerlist.append(alist)
 
 bag_rects = [centerlist[9][i] for i in range(6)]
-bag_counts = np.ones((2,6))*6
+bag_counts = np.ones((2,6))*1
 
 # Set the font
 font=pygame.font.SysFont('arial', 40)
@@ -234,6 +234,7 @@ qminus_text=font2.render('|->', True, BLUE)
 q750_text = font2.render('75|0>', True, BLUE)
 q751_text = font2.render('75|1>', True, BLUE)
 
+print(qmax)
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 # -------- Main Program Loop -----------
@@ -268,7 +269,7 @@ while not done:
         elif row==8 and column < 6:
             qselected=column
             ismeasure=0
-        elif row<8 and playable[row][column]==1:
+        elif row<8:
             # If user selected measure before this and the square he chose now has been played at and measurement has not been made there already
             if ismeasure and qplayed[row][column] != 0 and measured[row][column] == 0 and (countDigit(qplayed[row][column])==qmax[row][column]):
                 qselected=None
@@ -458,8 +459,9 @@ while not done:
     for row in range(8):
     	for column in range(8):
     		a[row][column] = countDigit(qplayed[row][column])
-    if (np.all(bag_counts[movenumber%2]==0) and (not np.any(a<qmax))):
-    	movenumber+=1
+    ii = np.where(measured == 0)
+    if (np.count_nonzero(bag_counts[movenumber%2]==0)==6) and (np.all(a[ii]<qmax[ii])):
+        movenumber+=1
 
  
     # Limit to 60 frames per second
