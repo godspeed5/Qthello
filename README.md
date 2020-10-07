@@ -23,13 +23,13 @@ The EN gates are special, in the sense that the move is played on both ends of t
 
 Gates on board:
 
-X: NOT 
+[X: NOT](https://en.wikipedia.org/wiki/Quantum_logic_gate#Pauli-X_gate) 
 
-CX: Controlled NOT
+[CX: Controlled NOT](https://en.wikipedia.org/wiki/Controlled_NOT_gate)
 
-H: Hadamard
+[H: Hadamard](https://en.wikipedia.org/wiki/Quantum_logic_gate#Hadamard_(H)_gate)
 
-EN: The simple Bell circuit with H followed by CNOT; Diagonals are connected.
+[EN: The simple Bell circuit with H followed by CNOT; Diagonals are connected.](https://en.wikipedia.org/wiki/Bell_state)
 
 
 You can play a qubit or measure (the red m square) each turn.
