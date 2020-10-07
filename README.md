@@ -1,7 +1,7 @@
 # # Qthello
 
 # Quantum Othello:
-The aim of the game is to have more of your colour on the board than your opponent. Classical Othello rules of flipping flanked discs apply here as well, but these rules kick in only after measurement. The twist is in Qthello you are likely to play against yourself, so be careful!
+The aim of the game is to have more of your colour on the board than your opponent. [Classical Othello](https://www.mastersofgames.com/rules/reversi-othello-rules.htm#:~:text=Basic%20Play,pieces%20are%20captured%20or%20reversed) rules of flipping flanked discs apply here as well, but these rules kick in only after measurement. The twist is in Qthello you are likely to play against yourself, so be careful!
 
 Note: You must have qiskit and pygame installed to run the program. If you do not, just run:
 
